@@ -1,0 +1,28 @@
+version: "3.8"
+
+services:
+  studybud:
+    build:
+      context: .
+      dockerfile: .devcontainer/Dockerfile
+    tty: true
+    env_file:
+      - .devcontainer/.dev.env
+    command: python manage.py runserver 0.0.0.0:8000
+    restart: always
+    volumes:
+      - type: bind
+        source: ./studybud
+        target: /studybud
+    depends_on:
+      - db
+      - redis
+    ports:
+      - 80:8000
+  db:
+    image: postgres:12
+    environment:
+      - POSTGRES_NAME=postgres
+      - POSTGRES_USER=djangoapp
+      - POSTGRES_PASSWORD=djangoapp
+      - POSTGRES_DB=djangoapp
